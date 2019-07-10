@@ -35,10 +35,6 @@ func MuteRouter() http.Handler {
 	return router
 }
 
-type Error struct {
-	Message string
-}
-
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("index")
 	w.Header().Add("Content-Type", "text/html; charset=utf-8")
@@ -102,8 +98,8 @@ var netClient = &http.Client{
 	Timeout: time.Second * 10,
 }
 
-type Command struct {
-	Name string
+type Error struct {
+	Message string
 }
 
 func muteHandler(w http.ResponseWriter, r *http.Request) {
@@ -112,16 +108,16 @@ func muteHandler(w http.ResponseWriter, r *http.Request) {
 	resp, err := netClient.Get(muteUrl)
 	if err != nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
-		command := Command{Name: "failed to connect"}
-		json.NewEncoder(w).Encode(command)
+		error := Error{Message: "failed to connect"}
+		json.NewEncoder(w).Encode(error)
 		return
 	}
 	defer resp.Body.Close()
 	content, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
-		command := Command{Name: "failed to accept body"}
-		json.NewEncoder(w).Encode(command)
+		error := Error{Message: "failed to accept body"}
+		json.NewEncoder(w).Encode(error)
 		return
 	}
 	w.WriteHeader(resp.StatusCode)
@@ -134,16 +130,16 @@ func unmuteHandler(w http.ResponseWriter, r *http.Request) {
 	resp, err := netClient.Get(unmuteUrl)
 	if err != nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
-		command := Command{Name: "failed to connect"}
-		json.NewEncoder(w).Encode(command)
+		error := Error{Message: "failed to connect"}
+		json.NewEncoder(w).Encode(error)
 		return
 	}
 	defer resp.Body.Close()
 	content, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
-		command := Command{Name: "failed to accept body"}
-		json.NewEncoder(w).Encode(command)
+		error := Error{Message: "failed to accept body"}
+		json.NewEncoder(w).Encode(error)
 		return
 	}
 	w.WriteHeader(resp.StatusCode)
