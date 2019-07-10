@@ -86,11 +86,26 @@ function unmute() {
 </html>`)))
 }
 
+func boolToStr(value bool) string {
+	if value {
+		return "true"
+	} else {
+		return "false"
+	}
+}
+
+func findMuteUrl(mute bool) string {
+	return setMuteUrl + "?enable=" + boolToStr(mute)
+}
+
 const (
 	hifiUrl    = "http://192.168.0.99/YamahaExtendedControl/v1"
 	setMuteUrl = hifiUrl + "/main/setMute"
-	muteUrl    = setMuteUrl + "?enable=true"
-	unmuteUrl  = setMuteUrl + "?enable=false"
+)
+
+var (
+	muteUrl   = findMuteUrl(true)
+	unmuteUrl = findMuteUrl(false)
 )
 
 // Timeouts: https://medium.com/@nate510/don-t-use-go-s-default-http-client-4804cb19f779
