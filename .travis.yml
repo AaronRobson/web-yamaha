@@ -5,5 +5,8 @@ go:
   - 1.11.x
   - 1.12.x
 
+before_install:
+  - go get -v github.com/gorilla/mux
+
 script:
   - make test
