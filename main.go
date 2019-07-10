@@ -29,6 +29,7 @@ func MuteRouter() http.Handler {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/", indexHandler).Methods("GET")
+	router.HandleFunc("/ping", pingHandler).Methods("GET")
 	router.HandleFunc("/mute", muteHandler).Methods("GET")
 	router.HandleFunc("/unmute", unmuteHandler).Methods("GET")
 
@@ -111,6 +112,12 @@ var (
 // Timeouts: https://medium.com/@nate510/don-t-use-go-s-default-http-client-4804cb19f779
 var netClient = &http.Client{
 	Timeout: time.Second * 10,
+}
+
+func pingHandler(w http.ResponseWriter, r *http.Request) {
+	log.Print("ping")
+	w.Header().Add("Content-Type", "application/json")
+	w.Write([]byte(`true`))
 }
 
 type Error struct {
