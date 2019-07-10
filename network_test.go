@@ -30,6 +30,10 @@ func TestMute(t *testing.T) {
 			status, http.StatusOK)
 	}
 
+	if ctype := rr.Header().Get("Content-Type"); ctype != "application/json" {
+		t.Errorf("content type header does not match: got %v want %v", ctype, "application/json")
+	}
+
 	// Check the response body is what we expect.
 	expected := `true`
 	if rr.Body.String() != expected {
