@@ -120,7 +120,7 @@ func pingHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(`true`))
 }
 
-type Error struct {
+type ErrorResponse struct {
 	Message string
 }
 
@@ -130,16 +130,16 @@ func muteHandler(w http.ResponseWriter, r *http.Request) {
 	resp, err := netClient.Get(muteUrl)
 	if err != nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
-		error := Error{Message: "failed to connect"}
-		json.NewEncoder(w).Encode(error)
+		errorResponse := ErrorResponse{Message: "failed to connect"}
+		json.NewEncoder(w).Encode(errorResponse)
 		return
 	}
 	defer resp.Body.Close()
 	content, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
-		error := Error{Message: "failed to accept body"}
-		json.NewEncoder(w).Encode(error)
+		errorResponse := ErrorResponse{Message: "failed to accept body"}
+		json.NewEncoder(w).Encode(errorResponse)
 		return
 	}
 	w.WriteHeader(resp.StatusCode)
@@ -152,16 +152,16 @@ func unmuteHandler(w http.ResponseWriter, r *http.Request) {
 	resp, err := netClient.Get(unmuteUrl)
 	if err != nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
-		error := Error{Message: "failed to connect"}
-		json.NewEncoder(w).Encode(error)
+		errorResponse := ErrorResponse{Message: "failed to connect"}
+		json.NewEncoder(w).Encode(errorResponse)
 		return
 	}
 	defer resp.Body.Close()
 	content, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
-		error := Error{Message: "failed to accept body"}
-		json.NewEncoder(w).Encode(error)
+		errorResponse := ErrorResponse{Message: "failed to accept body"}
+		json.NewEncoder(w).Encode(errorResponse)
 		return
 	}
 	w.WriteHeader(resp.StatusCode)
