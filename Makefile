@@ -1,7 +1,11 @@
 .DEFAULT_GOAL := all
 
 .PHONY: all
-all: test run
+all: format test run
+
+.PHONY: format
+format:
+	go fmt
 
 .PHONY: test
 test:
