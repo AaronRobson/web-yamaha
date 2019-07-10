@@ -48,7 +48,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 <body>
-<script>
+<script type="text/javascript">
 function makeCall(endpointName) {
   console.log(endpointName);
   var request = new XMLHttpRequest()
