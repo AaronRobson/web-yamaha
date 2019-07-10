@@ -76,7 +76,7 @@ func ValidateHtml(value string) (err error) {
 	r := strings.NewReader(value)
 	d := xml.NewDecoder(r)
 	// Configure the decoder for HTML; leave off strict and autoclose for XHTML
-	d.Strict = false
+	d.Strict = true
 	d.AutoClose = xml.HTMLAutoClose
 	d.Entity = xml.HTMLEntity
 	for {
