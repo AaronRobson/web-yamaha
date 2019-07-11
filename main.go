@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/gorilla/mux"
 	"io/ioutil"
 	"log"
@@ -39,7 +38,7 @@ func MuteRouter() http.Handler {
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("index")
 	w.Header().Add("Content-Type", "text/html; charset=utf-8")
-	w.Write([]byte(fmt.Sprintf(
+	w.Write([]byte(
 		`<!DOCTYPE html>
 <html lang="en-US">
 <head>
@@ -84,7 +83,7 @@ function unmute() {
 <button onclick="mute()">Mute</button>
 <button onclick="unmute()">Unmute</button>
 </body>
-</html>`)))
+</html>`))
 }
 
 func boolToStr(value bool) string {
