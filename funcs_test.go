@@ -4,21 +4,21 @@ import (
 	"testing"
 )
 
-var muteTests = []struct {
-	given    bool
-	expected string
-}{
-	{false, "unmute"},
-	{true, "mute"},
-}
-
 func TestMuteToStr(t *testing.T) {
-	for _, tt := range muteTests {
-		actual := muteToStr(tt.given)
-		if actual != tt.expected {
+	var tables = []struct {
+		given    bool
+		expected string
+	}{
+		{false, "unmute"},
+		{true, "mute"},
+	}
+
+	for _, table := range tables {
+		actual := muteToStr(table.given)
+		if actual != table.expected {
 			t.Errorf(
 				"muteToStr(%v) returned: '%v' expected '%v'.",
-				tt.given, actual, tt.expected)
+				table.given, actual, table.expected)
 		}
 	}
 }
