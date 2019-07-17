@@ -13,4 +13,4 @@ test:
 
 .PHONY: run
 run:
-	go run main.go url.go
+	go run main.go funcs.go url.go
