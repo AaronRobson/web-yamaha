@@ -94,6 +94,14 @@ func boolToStr(value bool) string {
 	}
 }
 
+func muteToStr(mute bool) string {
+	if mute {
+		return "mute"
+	} else {
+		return "unmute"
+	}
+}
+
 func findMuteUrl(mute bool) string {
 	return setMuteUrl + "?enable=" + boolToStr(mute)
 }
@@ -127,11 +135,7 @@ func unmuteHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func generalMuteHandler(mute bool, w http.ResponseWriter, r *http.Request) {
-	if mute {
-		log.Print("mute")
-	} else {
-		log.Print("unmute")
-	}
+	log.Print(muteToStr(mute))
 	w.Header().Add("Content-Type", "application/json")
 	resp, err := netClient.Get(findMuteUrl(mute))
 	if err != nil {
