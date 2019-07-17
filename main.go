@@ -94,23 +94,6 @@ func boolToStr(value bool) string {
 	}
 }
 
-func muteToStr(mute bool) string {
-	if mute {
-		return "mute"
-	} else {
-		return "unmute"
-	}
-}
-
-func findMuteUrl(mute bool) string {
-	return setMuteUrl + "?enable=" + boolToStr(mute)
-}
-
-const (
-	hifiUrl    = "http://192.168.0.99/YamahaExtendedControl/v1"
-	setMuteUrl = hifiUrl + "/main/setMute"
-)
-
 // Timeouts: https://medium.com/@nate510/don-t-use-go-s-default-http-client-4804cb19f779
 var netClient = &http.Client{
 	Timeout: time.Second * 10,
