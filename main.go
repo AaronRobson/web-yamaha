@@ -6,16 +6,18 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 )
 
 func main() {
-	log.Print("Starting")
+	var port = 8080
+	log.Print("Starting - http://localhost:" + strconv.Itoa(port) + "/")
 
 	shutdown := make(chan bool)
 
 	go func() {
-		if err := http.ListenAndServe(":80", MuteRouter()); err != nil {
+		if err := http.ListenAndServe(":"+strconv.Itoa(port), MuteRouter()); err != nil {
 			log.Print(err)
 		}
 		shutdown <- true

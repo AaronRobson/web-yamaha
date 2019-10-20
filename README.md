@@ -14,3 +14,4 @@ go get -v github.com/gorilla/mux
 ```bash
 make
 ```
+Open http://localhost:8080/
