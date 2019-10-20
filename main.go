@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"path"
 	"strconv"
 	"time"
 )
@@ -39,53 +40,8 @@ func MuteRouter() http.Handler {
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("index")
-	w.Header().Add("Content-Type", "text/html; charset=utf-8")
-	w.Write([]byte(
-		`<!DOCTYPE html>
-<html lang="en-US">
-<head>
-<title>Hi-Fi Control</title>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-</head>
-<body>
-<script type="text/javascript">
-function makeCall(endpointName) {
-  console.log(endpointName);
-  var request = new XMLHttpRequest()
-  request.open('GET', endpointName, true)
-  request.onreadystatechange = function () {
-    if (request.readyState !== 4) {
-      return;
-    }
-    if (request.status === 200) {
-      var jsonResponse = JSON.parse(request.responseText);
-      var response_code = jsonResponse['response_code'];
-      if (response_code === 0) {
-        console.log('done');
-      } else {
-        console.log('non-zero response code found ' + response_code);
-      }
-    } else {
-      console.log('error: ' + request.status + ' ' + request.statusText +
-        '\n' + request.responseText);
-    }
-  }
-  request.send();
-}
-function mute() {
-  makeCall('/mute')
-}
-function unmute() {
-  makeCall('/unmute')
-}
-</script>
-<h1>Hi-Fi Control</h1>
-<p title="Go ahead">Control your Hi-Fi with the buttons below.</p>
-<button onclick="mute()">Mute</button>
-<button onclick="unmute()">Unmute</button>
-</body>
-</html>`))
+	p := path.Dir("./static/index.html")
+	http.ServeFile(w, r, p)
 }
 
 // Timeouts: https://medium.com/@nate510/don-t-use-go-s-default-http-client-4804cb19f779
