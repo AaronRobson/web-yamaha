@@ -34,6 +34,8 @@ func MuteRouter() http.Handler {
 	router.HandleFunc("/ping", pingHandler).Methods("GET")
 	router.HandleFunc("/mute", muteHandler).Methods("GET")
 	router.HandleFunc("/unmute", unmuteHandler).Methods("GET")
+	router.HandleFunc("/volumeUp", volumeUpHandler).Methods("GET")
+	router.HandleFunc("/volumeDown", volumeDownHandler).Methods("GET")
 
 	return router
 }
@@ -71,6 +73,36 @@ func generalMuteHandler(mute bool, w http.ResponseWriter, r *http.Request) {
 	log.Print(muteToStr(mute))
 	w.Header().Add("Content-Type", "application/json")
 	resp, err := netClient.Get(findMuteUrl(mute))
+	if err != nil {
+		w.WriteHeader(http.StatusServiceUnavailable)
+		errorResponse := ErrorResponse{Message: "failed to connect"}
+		json.NewEncoder(w).Encode(errorResponse)
+		return
+	}
+	defer resp.Body.Close()
+	content, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusServiceUnavailable)
+		errorResponse := ErrorResponse{Message: "failed to accept body"}
+		json.NewEncoder(w).Encode(errorResponse)
+		return
+	}
+	w.WriteHeader(resp.StatusCode)
+	w.Write(content)
+}
+
+func volumeUpHandler(w http.ResponseWriter, r *http.Request) {
+	generalVolumeHandler(true, w, r)
+}
+
+func volumeDownHandler(w http.ResponseWriter, r *http.Request) {
+	generalVolumeHandler(false, w, r)
+}
+
+func generalVolumeHandler(volumeUp bool, w http.ResponseWriter, r *http.Request) {
+	log.Print(boolToUpDown(volumeUp))
+	w.Header().Add("Content-Type", "application/json")
+	resp, err := netClient.Get(findVolumeUrl(volumeUp))
 	if err != nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
 		errorResponse := ErrorResponse{Message: "failed to connect"}

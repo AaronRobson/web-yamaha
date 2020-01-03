@@ -36,10 +36,18 @@ function mute() {
 function unmute() {
   makeCall('/unmute')
 }
+function volumeUp() {
+  makeCall('/volumeUp')
+}
+function volumeDown() {
+  makeCall('/volumeDown')
+}
 </script>
 <h1>Hi-Fi Control</h1>
 <p title="Go ahead">Control your Hi-Fi with the buttons below.</p>
 <button onclick="mute()">Mute</button>
 <button onclick="unmute()">Unmute</button>
+<button onclick="volumeUp()">Volume Up</button>
+<button onclick="volumeDown()">Volume Down</button>
 </body>
 </html>
