@@ -25,7 +25,7 @@ func findVolumeUrl(volumeUp bool) string {
 }
 
 const (
-	hifiUrl    = "http://192.168.0.99/YamahaExtendedControl/v1"
-	setMuteUrl = hifiUrl + "/main/setMute"
+	hifiUrl      = "http://192.168.0.99/YamahaExtendedControl/v1"
+	setMuteUrl   = hifiUrl + "/main/setMute"
 	setVolumeUrl = hifiUrl + "/main/setVolume"
 )
