@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := all
 
 .PHONY: all
-all: format test run
+all: format test
 
 .PHONY: format
 format:
