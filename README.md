@@ -10,8 +10,13 @@ sudo apt install golang
 go get -v github.com/gorilla/mux
 ```
 
-## Test and run
+## Format and Test
 ```bash
 make
+```
+
+## Run
+```bash
+make run
 ```
 Open http://localhost:8080/
