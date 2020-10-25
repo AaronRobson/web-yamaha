@@ -58,6 +58,7 @@ func MuteRouter() http.Handler {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/", indexHandler).Methods("GET")
+	router.HandleFunc("/favicon.png", faviconHandler).Methods("GET")
 
 	router.HandleFunc("/ping", pingHandler).Methods("GET")
 
@@ -71,6 +72,11 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("index")
 	p := path.Dir("./static/index.html")
 	http.ServeFile(w, r, p)
+}
+
+func faviconHandler(w http.ResponseWriter, r *http.Request) {
+	log.Print("favicon")
+	http.ServeFile(w, r, "./static/favicon.png")
 }
 
 // Timeouts: https://medium.com/@nate510/don-t-use-go-s-default-http-client-4804cb19f779
