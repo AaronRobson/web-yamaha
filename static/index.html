@@ -11,7 +11,7 @@ function makeCall(httpMethod, endpointName, jsonObj) {
   const jsonText = JSON.stringify(jsonObj);
   console.log(httpMethod + ' ' + endpointName + ' of ' + jsonText);
   var request = new XMLHttpRequest()
-  request.open('POST', endpointName, true)
+  request.open(httpMethod, endpointName, true)
   request.onreadystatechange = function () {
     if (request.readyState !== 4) {
       return;
