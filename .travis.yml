@@ -7,6 +7,7 @@ go:
 
 before_install:
   - go get -v github.com/gorilla/mux
+  - go get -v gopkg.in/go-playground/validator.v9
 
 script:
   - make test
