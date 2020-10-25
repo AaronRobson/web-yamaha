@@ -7,10 +7,11 @@
 </head>
 <body>
 <script>
-function makeCall(endpointName) {
-  console.log(endpointName);
+function makeCall(httpMethod, endpointName, jsonObj) {
+  const jsonText = JSON.stringify(jsonObj);
+  console.log(httpMethod + ' ' + endpointName + ' of ' + jsonText);
   var request = new XMLHttpRequest()
-  request.open('GET', endpointName, true)
+  request.open('POST', endpointName, true)
   request.onreadystatechange = function () {
     if (request.readyState !== 4) {
       return;
@@ -28,19 +29,31 @@ function makeCall(endpointName) {
         '\n' + request.responseText);
     }
   }
-  request.send();
+  request.send(jsonText);
 }
+
+function setMute(mute) {
+  makeCall('POST', '/$setMute', {"mute": mute});
+}
+
+function setVolume(volume) {
+  makeCall('POST', '/$setVolume', {"volume": volume});
+}
+
 function mute() {
-  makeCall('/mute')
+  setMute('mute');
 }
+
 function unmute() {
-  makeCall('/unmute')
+  setMute('unmute');
 }
+
 function volumeUp() {
-  makeCall('/volumeUp')
+  setVolume('up');
 }
+
 function volumeDown() {
-  makeCall('/volumeDown')
+  setVolume('down');
 }
 </script>
 <h1>Hi-Fi Control</h1>
@@ -51,3 +64,4 @@ function volumeDown() {
 <button onclick="volumeDown()">Volume Down</button>
 </body>
 </html>
+
