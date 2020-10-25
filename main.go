@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
+	"gopkg.in/go-playground/validator.v9"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -11,7 +12,33 @@ import (
 	"time"
 )
 
+var validate *validator.Validate
+
+func ValidateMute(fl validator.FieldLevel) bool {
+	switch fl.Field().String() {
+	case
+		"mute",
+		"unmute":
+		return true
+	}
+	return false
+}
+
+func ValidateVolume(fl validator.FieldLevel) bool {
+	switch fl.Field().String() {
+	case
+		"up",
+		"down":
+		return true
+	}
+	return false
+}
+
 func main() {
+	validate = validator.New()
+	validate.RegisterValidation("mute", ValidateMute)
+	validate.RegisterValidation("volume", ValidateVolume)
+
 	var port = 8080
 	log.Print("Starting - http://localhost:" + strconv.Itoa(port) + "/")
 
@@ -31,11 +58,11 @@ func MuteRouter() http.Handler {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/", indexHandler).Methods("GET")
+
 	router.HandleFunc("/ping", pingHandler).Methods("GET")
-	router.HandleFunc("/mute", muteHandler).Methods("GET")
-	router.HandleFunc("/unmute", unmuteHandler).Methods("GET")
-	router.HandleFunc("/volumeUp", volumeUpHandler).Methods("GET")
-	router.HandleFunc("/volumeDown", volumeDownHandler).Methods("GET")
+
+	router.HandleFunc("/$setMute", setMuteHandler).Methods("POST")
+	router.HandleFunc("/$setVolume", setVolumeHandler).Methods("POST")
 
 	return router
 }
@@ -58,21 +85,41 @@ func pingHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 type ErrorResponse struct {
-	Message string
+	Message string `json:"message"`
 }
 
-func muteHandler(w http.ResponseWriter, r *http.Request) {
-	generalMuteHandler(true, w, r)
+type MuteRequest struct {
+	Mute string `json:"mute" validate:"mute"`
 }
 
-func unmuteHandler(w http.ResponseWriter, r *http.Request) {
-	generalMuteHandler(false, w, r)
+type VolumeRequest struct {
+	Volume string `json:"volume" validate:"volume"`
 }
 
-func generalMuteHandler(mute bool, w http.ResponseWriter, r *http.Request) {
-	log.Print(muteToStr(mute))
+func setMuteHandler(w http.ResponseWriter, r *http.Request) {
+	log.Print("/$setMute")
 	w.Header().Add("Content-Type", "application/json")
-	resp, err := netClient.Get(findMuteUrl(mute))
+	var request MuteRequest
+	err := json.NewDecoder(r.Body).Decode(&request)
+	defer r.Body.Close()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		errorResponse := ErrorResponse{Message: err.Error()}
+		json.NewEncoder(w).Encode(errorResponse)
+		return
+	}
+
+	err = validate.Struct(request)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		errorResponse := ErrorResponse{Message: err.Error()}
+		json.NewEncoder(w).Encode(errorResponse)
+		return
+	}
+
+	muteBool := request.Mute == "mute"
+
+	resp, err := netClient.Get(findMuteUrl(muteBool))
 	if err != nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
 		errorResponse := ErrorResponse{Message: "failed to connect"}
@@ -91,18 +138,30 @@ func generalMuteHandler(mute bool, w http.ResponseWriter, r *http.Request) {
 	w.Write(content)
 }
 
-func volumeUpHandler(w http.ResponseWriter, r *http.Request) {
-	generalVolumeHandler(true, w, r)
-}
-
-func volumeDownHandler(w http.ResponseWriter, r *http.Request) {
-	generalVolumeHandler(false, w, r)
-}
-
-func generalVolumeHandler(volumeUp bool, w http.ResponseWriter, r *http.Request) {
-	log.Print(boolToUpDown(volumeUp))
+func setVolumeHandler(w http.ResponseWriter, r *http.Request) {
+	log.Print("/$setVolume")
 	w.Header().Add("Content-Type", "application/json")
-	resp, err := netClient.Get(findVolumeUrl(volumeUp))
+	var request VolumeRequest
+	err := json.NewDecoder(r.Body).Decode(&request)
+	defer r.Body.Close()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		errorResponse := ErrorResponse{Message: err.Error()}
+		json.NewEncoder(w).Encode(errorResponse)
+		return
+	}
+
+	err = validate.Struct(request)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		errorResponse := ErrorResponse{Message: err.Error()}
+		json.NewEncoder(w).Encode(errorResponse)
+		return
+	}
+
+	volumeBool := request.Volume == "up"
+
+	resp, err := netClient.Get(findVolumeUrl(volumeBool))
 	if err != nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
 		errorResponse := ErrorResponse{Message: "failed to connect"}
