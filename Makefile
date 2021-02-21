@@ -3,6 +3,10 @@
 .PHONY: all
 all: format test
 
+.PHONY: install
+install:
+	go get ${gobuild_args} ./...
+
 .PHONY: format
 format:
 	go fmt
@@ -13,4 +17,4 @@ test:
 
 .PHONY: run
 run:
-	go run main.go funcs.go url.go
+	go run main.go funcs.go url.go messages.go
