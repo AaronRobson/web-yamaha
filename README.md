@@ -7,8 +7,7 @@ A web based app for controlling a Yamaha amplifier using the Extended Control AP
 ```bash
 sudo apt update
 sudo apt install golang
-go get -v github.com/gorilla/mux
-go get -v gopkg.in/go-playground/validator.v9
+make install
 ```
 
 ## Format and Test
@@ -36,4 +35,3 @@ Or:
 ```bash
 curl -i -X POST --data '{"volume": "down"}' --header 'Content-Type: application/json' http://localhost:8080/\$setVolume
 ```
-
