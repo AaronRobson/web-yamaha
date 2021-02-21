@@ -38,18 +38,18 @@ func TestBoolToUpDown(t *testing.T) {
 	}
 }
 
-func TestFindMuteUrl(t *testing.T) {
+func TestFindMuteURL(t *testing.T) {
 	given := false
-	actual := findMuteUrl(given)
+	actual := findMuteURL(given)
 	expected := "http://192.168.0.99/YamahaExtendedControl/v1/main/setMute?enable=false"
 	if actual != expected {
 		t.Errorf("Mute URL of (%v) was incorrect, got: %s, want: %s.", given, actual, expected)
 	}
 }
 
-func TestFindVolumeUrl(t *testing.T) {
+func TestFindVolumeURL(t *testing.T) {
 	given := false
-	actual := findVolumeUrl(given)
+	actual := findVolumeURL(given)
 	expected := "http://192.168.0.99/YamahaExtendedControl/v1/main/setVolume?volume=down"
 	if actual != expected {
 		t.Errorf("Mute URL of (%v) was incorrect, got: %s, want: %s.", given, actual, expected)

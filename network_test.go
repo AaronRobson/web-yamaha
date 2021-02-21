@@ -32,7 +32,7 @@ func TestIndex(t *testing.T) {
 		t.Errorf("content type header does not match: got %v want %v", ctype, expectedContentType)
 	}
 
-	if err := ValidateHtml(rr.Body.String()); err != nil {
+	if err := ValidateHTML(rr.Body.String()); err != nil {
 		t.Errorf("HTML is invalid %v", err)
 	}
 }
@@ -71,7 +71,7 @@ func TestPing(t *testing.T) {
 	}
 }
 
-func ValidateHtml(value string) (err error) {
+func ValidateHTML(value string) (err error) {
 	//https://stackoverflow.com/a/52410528/1011785
 	r := strings.NewReader(value)
 	d := xml.NewDecoder(r)

@@ -15,7 +15,7 @@ func TestValidateMute(t *testing.T) {
 	}
 
 	for _, table := range tables {
-		obj := MuteRequest{
+		obj := muteRequest{
 			Mute: table.value,
 		}
 		err := validate.Struct(obj)
@@ -37,7 +37,7 @@ func TestValidateVolume(t *testing.T) {
 	}
 
 	for _, table := range tables {
-		obj := VolumeRequest{
+		obj := volumeRequest{
 			Volume: table.value,
 		}
 		err := validate.Struct(obj)
