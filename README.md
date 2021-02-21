@@ -6,13 +6,30 @@ A web based app for controlling a Yamaha amplifier using the Extended Control AP
 ## Prerequisites
 ```bash
 sudo apt update
-sudo apt install golang
+sudo apt install golang golint
 make install
 ```
 
-## Format and Test
+## Format code
+Recommend this be run before committing:
+```bash
+make format
+```
+
+## Check and Test
 ```bash
 make
+```
+
+### Check
+Run `golint`.
+```bash
+make check
+```
+
+### Test
+```bash
+make test
 ```
 
 ## Run

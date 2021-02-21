@@ -19,7 +19,7 @@ func main() {
 	shutdown := make(chan bool)
 
 	go func() {
-		if err := http.ListenAndServe(":"+strconv.Itoa(port), MuteRouter()); err != nil {
+		if err := http.ListenAndServe(":"+strconv.Itoa(port), muteRouter()); err != nil {
 			log.Print(err)
 		}
 		shutdown <- true
@@ -28,7 +28,7 @@ func main() {
 	<-shutdown
 }
 
-func MuteRouter() http.Handler {
+func muteRouter() http.Handler {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/", indexHandler).Methods("GET")
@@ -67,12 +67,12 @@ func pingHandler(w http.ResponseWriter, r *http.Request) {
 func setMuteHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("/$setMute")
 	w.Header().Add("Content-Type", "application/json")
-	var request MuteRequest
+	var request muteRequest
 	err := json.NewDecoder(r.Body).Decode(&request)
 	defer r.Body.Close()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-		errorResponse := ErrorResponse{Message: err.Error()}
+		errorResponse := errorResponse{Message: err.Error()}
 		json.NewEncoder(w).Encode(errorResponse)
 		return
 	}
@@ -80,17 +80,17 @@ func setMuteHandler(w http.ResponseWriter, r *http.Request) {
 	err = validate.Struct(request)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		errorResponse := ErrorResponse{Message: err.Error()}
+		errorResponse := errorResponse{Message: err.Error()}
 		json.NewEncoder(w).Encode(errorResponse)
 		return
 	}
 
 	muteBool := request.Mute == "mute"
 
-	resp, err := netClient.Get(findMuteUrl(muteBool))
+	resp, err := netClient.Get(findMuteURL(muteBool))
 	if err != nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
-		errorResponse := ErrorResponse{Message: "failed to connect"}
+		errorResponse := errorResponse{Message: "failed to connect"}
 		json.NewEncoder(w).Encode(errorResponse)
 		return
 	}
@@ -98,7 +98,7 @@ func setMuteHandler(w http.ResponseWriter, r *http.Request) {
 	content, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
-		errorResponse := ErrorResponse{Message: "failed to accept body"}
+		errorResponse := errorResponse{Message: "failed to accept body"}
 		json.NewEncoder(w).Encode(errorResponse)
 		return
 	}
@@ -109,12 +109,12 @@ func setMuteHandler(w http.ResponseWriter, r *http.Request) {
 func setVolumeHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("/$setVolume")
 	w.Header().Add("Content-Type", "application/json")
-	var request VolumeRequest
+	var request volumeRequest
 	err := json.NewDecoder(r.Body).Decode(&request)
 	defer r.Body.Close()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-		errorResponse := ErrorResponse{Message: err.Error()}
+		errorResponse := errorResponse{Message: err.Error()}
 		json.NewEncoder(w).Encode(errorResponse)
 		return
 	}
@@ -122,17 +122,17 @@ func setVolumeHandler(w http.ResponseWriter, r *http.Request) {
 	err = validate.Struct(request)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		errorResponse := ErrorResponse{Message: err.Error()}
+		errorResponse := errorResponse{Message: err.Error()}
 		json.NewEncoder(w).Encode(errorResponse)
 		return
 	}
 
 	volumeBool := request.Volume == "up"
 
-	resp, err := netClient.Get(findVolumeUrl(volumeBool))
+	resp, err := netClient.Get(findVolumeURL(volumeBool))
 	if err != nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
-		errorResponse := ErrorResponse{Message: "failed to connect"}
+		errorResponse := errorResponse{Message: "failed to connect"}
 		json.NewEncoder(w).Encode(errorResponse)
 		return
 	}
@@ -140,7 +140,7 @@ func setVolumeHandler(w http.ResponseWriter, r *http.Request) {
 	content, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusServiceUnavailable)
-		errorResponse := ErrorResponse{Message: "failed to accept body"}
+		errorResponse := errorResponse{Message: "failed to accept body"}
 		json.NewEncoder(w).Encode(errorResponse)
 		return
 	}

@@ -2,21 +2,21 @@ package main
 
 import "gopkg.in/go-playground/validator.v10"
 
-type ErrorResponse struct {
+type errorResponse struct {
 	Message string `json:"message"`
 }
 
-type MuteRequest struct {
+type muteRequest struct {
 	Mute string `json:"mute" validate:"mute"`
 }
 
-type VolumeRequest struct {
+type volumeRequest struct {
 	Volume string `json:"volume" validate:"volume"`
 }
 
 var validate *validator.Validate
 
-func ValidateMute(fl validator.FieldLevel) bool {
+func validateMute(fl validator.FieldLevel) bool {
 	switch fl.Field().String() {
 	case
 		"mute",
@@ -26,7 +26,7 @@ func ValidateMute(fl validator.FieldLevel) bool {
 	return false
 }
 
-func ValidateVolume(fl validator.FieldLevel) bool {
+func validateVolume(fl validator.FieldLevel) bool {
 	switch fl.Field().String() {
 	case
 		"up",
@@ -38,6 +38,6 @@ func ValidateVolume(fl validator.FieldLevel) bool {
 
 func init() {
 	validate = validator.New()
-	validate.RegisterValidation("mute", ValidateMute)
-	validate.RegisterValidation("volume", ValidateVolume)
+	validate.RegisterValidation("mute", validateMute)
+	validate.RegisterValidation("volume", validateVolume)
 }

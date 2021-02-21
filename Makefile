@@ -11,6 +11,10 @@ install:
 format:
 	go fmt
 
+.PHONY: check
+check:
+	golint
+
 .PHONY: test
 test:
 	go test ./... -cover
