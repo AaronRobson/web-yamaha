@@ -1,0 +1,5 @@
+*
+
+!*.go
+!static/favicon.png
+!static/index.html

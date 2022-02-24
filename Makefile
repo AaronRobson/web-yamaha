@@ -7,6 +7,18 @@ all: format test
 install:
 	go get ${gobuild_args} ./...
 
+.PHONY: docker-build
+docker-build:
+	docker build .
+
+.PHONY: docker-run
+docker-run: docker-build
+	docker run \
+		-p 8080:8080/tcp
+		--read-only
+		-t web-yamaha
+		something
+
 .PHONY: format
 format:
 	go fmt
